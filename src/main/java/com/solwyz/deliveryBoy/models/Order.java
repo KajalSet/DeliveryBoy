@@ -24,8 +24,7 @@ public class Order {
 	private String customerAddress;
 	private double totalPrice;
 	private String status; // e.g., "Pending", "Accepted", "Delivered"
-    private String storeName;
- 
+   
 	@ManyToOne
 	@JsonIgnore // Prevents infinite recursion
 	private DeliveryBoy deliveryBoy;
