@@ -1,5 +1,6 @@
 package com.solwyz.deliveryBoy.models;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -41,7 +42,9 @@ public class DeliveryBoy {
 	@OneToMany(mappedBy = "deliveryBoy")
     @JsonManagedReference  // Helps manage serialization
     private List<Order> orders;
-	// Getters and setters for all fields
+	
+	private String resetToken;
+	private Date resetTokenExpiryDate;
 
 	public Long getId() {
 		return id;
@@ -121,6 +124,22 @@ public class DeliveryBoy {
 
 	public void setMobileNumner(String mobileNumner) {
 		this.mobileNumner = mobileNumner;
+	}
+
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
+	public Date getResetTokenExpiryDate() {
+		return resetTokenExpiryDate;
+	}
+
+	public void setResetTokenExpiryDate(Date resetTokenExpiryDate) {
+		this.resetTokenExpiryDate = resetTokenExpiryDate;
 	}
 	
 	
