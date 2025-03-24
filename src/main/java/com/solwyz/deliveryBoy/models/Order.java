@@ -1,5 +1,6 @@
 package com.solwyz.deliveryBoy.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -29,7 +30,8 @@ public class Order {
 	@JsonIgnore // Prevents infinite recursion
 	private DeliveryBoy deliveryBoy;
 
-	private Date orderDate;
+	private LocalDate orderDate;
+	//private Date orderDate;
 
 	public Long getId() {
 		return id;
@@ -79,12 +81,21 @@ public class Order {
 		this.deliveryBoy = deliveryBoy;
 	}
 
-	public Date getOrderDate() {
+	public LocalDate getOrderDate() {
 		return orderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
 	}
+	
+
+//	public Date getOrderDate() {
+//		return orderDate;
+//	}
+//
+//	public void setOrderDate(Date orderDate) {
+//		this.orderDate = orderDate;
+//	}
 
 }

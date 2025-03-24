@@ -3,6 +3,8 @@ package com.solwyz.deliveryBoy.controller.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
@@ -77,5 +79,15 @@ public class AuthController {
 	public ResponseEntity<DeliveryBoy> getDeliveryBoyById(@PathVariable Long id) {
 		DeliveryBoy deliveryBoy = deliveryBoyService.getDeliveryBoyById(id);
 		return ResponseEntity.ok(deliveryBoy);
+	}
+	
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> signOut() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null) {
+			SecurityContextHolder.clearContext();
+		}
+		return ResponseEntity.ok("You have been logged out successfully.");
 	}
 }

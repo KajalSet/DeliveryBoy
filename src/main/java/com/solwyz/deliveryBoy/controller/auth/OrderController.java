@@ -40,6 +40,16 @@ public class OrderController {
 		ApiResponse<Order> response = new ApiResponse<>("success", acceptedOrder);
 		return ResponseEntity.ok(response);
 	}
+	
+	//list of accepted orders
+	@GetMapping("/todaysOrder/{deliveryBoyId}")
+	public ResponseEntity<ApiResponse<List<Order>>> getAcceptedOrdersyDeliveryBoy(@PathVariable Long deliveryBoyId) {
+		List<Order> acceptedOrders=orderService.getAcceptedOrdersyDeliveryBoy(deliveryBoyId);
+		ApiResponse<List<Order>>response=new ApiResponse<>("success",acceptedOrders);
+		return ResponseEntity.ok(response);
+	}
+		
+	
 
 	// Reject Order (Delivery Boy)
 	@PostMapping("/{orderId}/reject")
@@ -48,9 +58,9 @@ public class OrderController {
 		ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
 		return ResponseEntity.ok(response);
 	}
-
+	
 	// Get Orders Assigned to Delivery Boy
-	@GetMapping("/assigned/{deliveryBoyId}")
+	@GetMapping("/assigned/")
 	public ResponseEntity<ApiResponse<List<Order>>> getAssignedOrders(@PathVariable Long deliveryBoyId,
 			@RequestParam String status) {
 		List<Order> orders = orderService.getOrdersByDeliveryBoy(deliveryBoyId, status);
@@ -66,40 +76,51 @@ public class OrderController {
 		return ResponseEntity.ok(response);
 	}
 
-	// Get all cancelled orders for a delivery boy
-	@GetMapping("/{deliveryBoyId}/cancelled")
-	public ResponseEntity<ApiResponse<List<Order>>> getCancelledOrders(@PathVariable Long deliveryBoyId) {
-		List<Order> cancelledOrders = orderService.getCancelledOrdersByDeliveryBoy(deliveryBoyId);
-		ApiResponse<List<Order>> response = new ApiResponse<>("success", cancelledOrders);
+
+	//get all orders rejected by delivery boy
+	@GetMapping("/{deliveryBoyId}/rejected")
+	public ResponseEntity<ApiResponse<List<Order>>> getRejectedOrders(@PathVariable Long deliveryBoyId) {
+		List<Order> rejectedOrders=orderService.getRejectedOrdersByDeliveryBoy(deliveryBoyId);
+		ApiResponse<List<Order>>response=new ApiResponse<>("success",rejectedOrders);
 		return ResponseEntity.ok(response);
 	}
+	// Get All Orders by Delivery Boy ID
+		@GetMapping("/all/{deliveryBoyId}")
+		public ResponseEntity<ApiResponse<List<Order>>> getAllOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
+			List<Order> allOrders = orderService.getAllOrdersByDeliveryBoy(deliveryBoyId);
+			ApiResponse<List<Order>> response = new ApiResponse<>("success", allOrders);
+			return ResponseEntity.ok(response);
+		}
+
+		// Get orders by date range (filter by day, week, month, year)
+		@GetMapping("/filter")
+		public ResponseEntity<ApiResponse<List<Order>>> getOrdersByDateRange(@RequestParam String startDate,
+				@RequestParam String endDate) {
+			// Parse the startDate and endDate to Date objects, implement parsing logic as
+			// needed
+			Date start = new Date(startDate); // Use proper date parsing
+			Date end = new Date(endDate); // Use proper date parsing
+			List<Order> orders = orderService.getOrdersByDateRange(start, end);
+			ApiResponse<List<Order>> response = new ApiResponse<>("success", orders);
+			return ResponseEntity.ok(response);
+		}
+	// Get all cancelled orders for a delivery boy
+//	@GetMapping("/{deliveryBoyId}/cancelled")
+//	public ResponseEntity<ApiResponse<List<Order>>> getCancelledOrders(@PathVariable Long deliveryBoyId) {
+//		List<Order> cancelledOrders = orderService.getCancelledOrdersByDeliveryBoy(deliveryBoyId);
+//		ApiResponse<List<Order>> response = new ApiResponse<>("success", cancelledOrders);
+//		return ResponseEntity.ok(response);
+//	}
+//	
 
 	// Cancel Order (Delivery Boy)
-	@PostMapping("/{orderId}/cancel")
-	public ResponseEntity<ApiResponse<Order>> cancelOrder(@PathVariable Long orderId) {
-		Order cancelledOrder = orderService.cancelOrder(orderId);
-		ApiResponse<Order> response = new ApiResponse<>("success", cancelledOrder);
-		return ResponseEntity.ok(response);
-	}
+//	@PostMapping("/{orderId}/cancel")
+//	public ResponseEntity<ApiResponse<Order>> cancelOrder(@PathVariable Long orderId) {
+//		Order cancelledOrder = orderService.cancelOrder(orderId);
+//		ApiResponse<Order> response = new ApiResponse<>("success", cancelledOrder);
+//		return ResponseEntity.ok(response);
+//	}
+	
 
-	// Get All Orders by Delivery Boy ID
-	@GetMapping("/all/{deliveryBoyId}")
-	public ResponseEntity<ApiResponse<List<Order>>> getAllOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
-		List<Order> allOrders = orderService.getAllOrdersByDeliveryBoy(deliveryBoyId);
-		ApiResponse<List<Order>> response = new ApiResponse<>("success", allOrders);
-		return ResponseEntity.ok(response);
-	}
-
-	// Get orders by date range (filter by day, week, month, year)
-	@GetMapping("/filter")
-	public ResponseEntity<ApiResponse<List<Order>>> getOrdersByDateRange(@RequestParam String startDate,
-			@RequestParam String endDate) {
-		// Parse the startDate and endDate to Date objects, implement parsing logic as
-		// needed
-		Date start = new Date(startDate); // Use proper date parsing
-		Date end = new Date(endDate); // Use proper date parsing
-		List<Order> orders = orderService.getOrdersByDateRange(start, end);
-		ApiResponse<List<Order>> response = new ApiResponse<>("success", orders);
-		return ResponseEntity.ok(response);
-	}
+	
 }
