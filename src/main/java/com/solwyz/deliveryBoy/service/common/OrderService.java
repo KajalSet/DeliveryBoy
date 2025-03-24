@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//import com.solwyz.deliveryBoy.controller.auth.Orders;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.models.Order;
 import com.solwyz.deliveryBoy.repositories.common.DeliveryBoyRepository;
@@ -55,24 +56,11 @@ public class OrderService {
 		return orderRepository.save(order);
 	}
 	
-	
-	public Order cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException("Order not found"));
-        
-        order.setStatus("CANCELLED");
-        return orderRepository.save(order);
-    }
 
     // Get All Orders for a Delivery Boy
-    public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId) {
-        return orderRepository.findByDeliveryBoyId(deliveryBoyId);
-    }
-    
-//    public List<Order>  (Long deliveryBoyId) {
-//        LocalDate today = LocalDate.now();
-//        return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
-//    }
+	public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId) {
+	    return orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+	}
 
 
     // Get Today's Accepted Orders for a Delivery Boy
@@ -92,8 +80,36 @@ public class OrderService {
 		return orderRepository.findByOrderDateBetween(startDate, endDate);
 	}
 
-	public List<Order> getCancelledOrdersByDeliveryBoy(Long deliveryBoyId) {
-		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "CANCELLED");
+	
+	public List<Order> getRejectedOrdersByDeliveryBoy(Long deliveryBoyId) {
+		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "REJECTED");
 	}
 
+	public List<Order> getAcceptedOrdersyDeliveryBoy(Long deliveryBoyId) {
+		
+		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "ACCEPTED");
+	}
+
+    
+//  public List<Order>  (Long deliveryBoyId) {
+//      LocalDate today = LocalDate.now();
+//      return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
+//  }
+
+
+	
+//	public Order cancelOrder(Long orderId) {
+//        Order order = orderRepository.findById(orderId)
+//            .orElseThrow(() -> new RuntimeException("Order not found"));
+//        
+//        order.setStatus("CANCELLED");
+//        return orderRepository.save(order);
+//    }
+
+
+//	public List<Order> getCancelledOrdersByDeliveryBoy(Long deliveryBoyId) {
+//		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "CANCELLED");
+//	}
+
+	
 }
