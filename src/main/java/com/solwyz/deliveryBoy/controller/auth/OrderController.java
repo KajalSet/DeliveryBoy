@@ -52,7 +52,7 @@ public class OrderController {
 	
 
 	// Reject Order (Delivery Boy)
-	@PostMapping("/{orderId}/reject")
+	@PostMapping("/reject/{orderId}")
 	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId,@RequestBody String reason) {
 		Order rejectedOrder = orderService.rejectOrder(orderId);
 		ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
@@ -60,7 +60,7 @@ public class OrderController {
 	}
 	
 	// Get Orders Assigned to Delivery Boy
-	@GetMapping("/assigned/")
+	@GetMapping("/assigned/{deliveryBoyId}")
 	public ResponseEntity<ApiResponse<List<Order>>> getAssignedOrders(@PathVariable Long deliveryBoyId,
 			@RequestParam String status) {
 		List<Order> orders = orderService.getOrdersByDeliveryBoy(deliveryBoyId, status);
@@ -78,7 +78,7 @@ public class OrderController {
 
 
 	//get all orders rejected by delivery boy
-	@GetMapping("/{deliveryBoyId}/rejected")
+	@GetMapping("/rejected/{deliveryBoyId}")
 	public ResponseEntity<ApiResponse<List<Order>>> getRejectedOrders(@PathVariable Long deliveryBoyId) {
 		List<Order> rejectedOrders=orderService.getRejectedOrdersByDeliveryBoy(deliveryBoyId);
 		ApiResponse<List<Order>>response=new ApiResponse<>("success",rejectedOrders);

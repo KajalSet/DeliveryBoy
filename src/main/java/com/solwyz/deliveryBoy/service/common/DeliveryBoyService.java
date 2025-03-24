@@ -1,13 +1,21 @@
 package com.solwyz.deliveryBoy.service.common;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.solwyz.deliveryBoy.Enum.Role;
 import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
+import com.solwyz.deliveryBoy.Exceptions.GenericException;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
@@ -15,9 +23,10 @@ import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.repositories.common.DeliveryBoyRepository;
 
+
 @Service
 public class DeliveryBoyService {
-
+	
 	@Autowired
 	private DeliveryBoyRepository deliveryBoyRepository;
 
@@ -136,5 +145,7 @@ public class DeliveryBoyService {
 		return deliveryBoyRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Delivery Boy not found with ID: " + id));
 	}
+
+	
 
 }

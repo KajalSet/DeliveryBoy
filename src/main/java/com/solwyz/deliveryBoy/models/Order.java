@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,7 +27,8 @@ public class Order {
 	private String status; // e.g., "Pending", "Accepted", "Delivered"
    
 	@ManyToOne
-	@JsonIgnore // Prevents infinite recursion
+	//@JsonIgnore // Prevents infinite recursion
+	@JsonBackReference 
 	private DeliveryBoy deliveryBoy;
 
 		private LocalDate orderDate;
@@ -99,12 +101,6 @@ public class Order {
 	}
 	
 
-//	public Date getOrderDate() {
-//		return orderDate;
-//	}
-//
-//	public void setOrderDate(Date orderDate) {
-//		this.orderDate = orderDate;
-//	}
+
 
 }
