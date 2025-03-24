@@ -30,8 +30,18 @@ public class Order {
 	@JsonIgnore // Prevents infinite recursion
 	private DeliveryBoy deliveryBoy;
 
-	private LocalDate orderDate;
+		private LocalDate orderDate;
 	//private Date orderDate;
+	private String storeName;
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
 
 	public Long getId() {
 		return id;
