@@ -1,16 +1,15 @@
 package com.solwyz.deliveryBoy.service.common;
 
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.solwyz.deliveryBoy.Enum.Role;
@@ -22,6 +21,9 @@ import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
 import com.solwyz.deliveryBoy.repositories.common.DeliveryBoyRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.lang3.time.DateUtils;
+import org.thymeleaf.context.Context;
 
 
 @Service
@@ -32,6 +34,12 @@ public class DeliveryBoyService {
 
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+	
+	@Autowired
+	private SpringTemplateEngine thymeleafTemplateEngine;
+
+	@Value("${app.frontEndResetUrl}")
+	private String frontEndResetUrl;
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -145,7 +153,50 @@ public class DeliveryBoyService {
 		return deliveryBoyRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Delivery Boy not found with ID: " + id));
 	}
+	
+//	 public void resetPassword(String username, String mpin, String newPassword) {
+//	        DeliveryBoy deliveryBoy = deliveryBoyRepository.findByUsername(username);
+//
+//	        if (deliveryBoy == null) {
+//	            throw new GenericException("User not found");
+//	        }
+//
+//	        // Verify MPIN
+//	        if (!passwordEncoder.matches(mpin, deliveryBoy.getMpin())) {
+//	            throw new GenericException("Invalid MPIN. Cannot reset password.");
+//	        }
+//
+//	        // Set new password
+//	        deliveryBoy.setPassword(passwordEncoder.encode(newPassword));
+//	        deliveryBoyRepository.save(deliveryBoy);
+//	    }
+
+	public void createPasswordResetTokenForUser(DeliveryBoy deliveryBoy, String token) {
+	    deliveryBoy.setResetToken(token);
+	    Date expDate = DateUtils.addMilliseconds(new Date(), 24 * 60 * 60 * 1000);
+	    deliveryBoy.setResetTokenExpiryDate(expDate);
+	    deliveryBoyRepository.save(deliveryBoy);
+	}
+ 
+	public void sendResetTokenEmail(String token, DeliveryBoy deliveryBoy) {
+		try {
+			final String url = frontEndResetUrl + "?token=" + token;
+			Context thymeleafContext = new Context();
+			Map<String, Object> templateModel = new HashMap<String, Object>();
+			templateModel.put("token_link", url);
+			thymeleafContext.setVariables(templateModel);
+			String htmlBody = thymeleafTemplateEngine.process("reset-password.html", thymeleafContext);
+			// MimeMessage email = constructHtmlEmail("Your Reset Password Link", htmlBody,
+			// user);
+			// mailSender.send(email);
+ 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new GenericException("Unable to email " + e.getMessage());
+		}
+		
+	}
+}
 
 	
 
-}

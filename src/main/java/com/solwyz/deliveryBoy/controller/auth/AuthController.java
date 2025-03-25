@@ -8,16 +8,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.solwyz.deliveryBoy.Exceptions.AuthenticationException;
+import com.solwyz.deliveryBoy.Exceptions.GenericException;
 import com.solwyz.deliveryBoy.filters.JwtTokenProvider;
 import com.solwyz.deliveryBoy.models.DeliveryBoy;
 import com.solwyz.deliveryBoy.pojo.request.AuthenticationRequest;
 import com.solwyz.deliveryBoy.pojo.request.RefreshTokenRequest;
 import com.solwyz.deliveryBoy.pojo.response.AuthenticationResponse;
+import com.solwyz.deliveryBoy.pojo.response.MessageResponse;
+import com.solwyz.deliveryBoy.repositories.common.DeliveryBoyRepository;
 import com.solwyz.deliveryBoy.service.common.DeliveryBoyService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -30,6 +36,9 @@ public class AuthController {
 
 	@Autowired
 	private DeliveryBoyService deliveryBoyService;
+	
+	@Autowired
+	private DeliveryBoyRepository deliveryBoyRepository;
 
 	// Register Delivery Boy (Admin only)
 	@PostMapping("/register")
@@ -90,4 +99,29 @@ public class AuthController {
 		}
 		return ResponseEntity.ok("You have been logged out successfully.");
 	}
+	
+//	 @PostMapping("/resetPassword")
+//	    public MessageResponse resetPassword(@RequestBody ResetPasswordRequest request) {
+//	        deliveryBoyService.resetPassword(request.getUsername(), request.getMpin(), request.getNewPassword());
+//	        return new MessageResponse("Password reset successful");
+//	    }
+	
+	    @GetMapping("/resetPassword")
+		public MessageResponse resetPassword(@RequestParam("username") String username) {
+//			Optional<User> user = userRepo.findByUserName(username);
+//			if (user.isEmpty()) {
+//				throw new GenericException("User Not Found");
+//
+//			}
+			Optional<DeliveryBoy> deliveryBoy = Optional.ofNullable(deliveryBoyRepository.findByUsername(username));
+	 
+		    if (deliveryBoy.isEmpty()) {
+		        throw new GenericException("Delivery Boy Not Found");
+		    }
+	 
+			String token = UUID.randomUUID().toString();
+			deliveryBoyService.createPasswordResetTokenForUser(deliveryBoy.get(), token);
+			deliveryBoyService.sendResetTokenEmail(token, deliveryBoy.get());
+			return new MessageResponse("Reset Password Link Sent to Email");
+		}
 }

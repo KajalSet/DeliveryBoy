@@ -1,7 +1,7 @@
 package com.solwyz.deliveryBoy.models;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "orders")
@@ -31,7 +31,7 @@ public class Order {
 	@JsonBackReference 
 	private DeliveryBoy deliveryBoy;
 
-		private LocalDate orderDate;
+	private LocalDate orderDate;
 	//private Date orderDate;
 	private String storeName;
 

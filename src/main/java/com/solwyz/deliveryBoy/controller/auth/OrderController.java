@@ -2,6 +2,7 @@ package com.solwyz.deliveryBoy.controller.auth;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,14 @@ public class OrderController {
 		ApiResponse<Order> response = new ApiResponse<>("success", createdOrder);
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/pending")
+	public ResponseEntity<ApiResponse<List<Order>>> getPendingOrders() {
+		List<Order> pendingOrders = orderService.getPendingOrders();
+		ApiResponse<List<Order>> response = new ApiResponse<>("success", pendingOrders);
+		return ResponseEntity.ok(response);
+	}
+
 
 	// Accept Order (Delivery Boy)
 	@PostMapping("/{orderId}/accept/{deliveryBoyId}")
@@ -52,12 +61,20 @@ public class OrderController {
 	
 
 	// Reject Order (Delivery Boy)
-	@PostMapping("/reject/{orderId}")
-	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId,@RequestBody String reason) {
+	@PostMapping("/reject/{deliveryBoyId}/{orderId}")
+	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId,@PathVariable Long deliveryBoyId,@RequestBody String reason) {
 		Order rejectedOrder = orderService.rejectOrder(orderId);
 		ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
 		return ResponseEntity.ok(response);
 	}
+	
+	   //get all orders rejected by delivery boy
+		@GetMapping("/rejected")
+		public ResponseEntity<ApiResponse<List<Order>>> getRejectedOrders() {
+			List<Order> rejectedOrders=orderService.getRejectedOrdersByDeliveryBoy();
+			ApiResponse<List<Order>>response=new ApiResponse<>("success",rejectedOrders);
+			return ResponseEntity.ok(response);
+		}
 	
 	// Get Orders Assigned to Delivery Boy
 	@GetMapping("/assigned/{deliveryBoyId}")
@@ -69,21 +86,9 @@ public class OrderController {
 	}
 
 	// Get Pending Orders (Delivery Boys can see this)
-	@GetMapping("/pending")
-	public ResponseEntity<ApiResponse<List<Order>>> getPendingOrders() {
-		List<Order> pendingOrders = orderService.getPendingOrders();
-		ApiResponse<List<Order>> response = new ApiResponse<>("success", pendingOrders);
-		return ResponseEntity.ok(response);
-	}
+	
 
-
-	//get all orders rejected by delivery boy
-	@GetMapping("/rejected/{deliveryBoyId}")
-	public ResponseEntity<ApiResponse<List<Order>>> getRejectedOrders(@PathVariable Long deliveryBoyId) {
-		List<Order> rejectedOrders=orderService.getRejectedOrdersByDeliveryBoy(deliveryBoyId);
-		ApiResponse<List<Order>>response=new ApiResponse<>("success",rejectedOrders);
-		return ResponseEntity.ok(response);
-	}
+	
 	// Get All Orders by Delivery Boy ID
 		@GetMapping("/all/{deliveryBoyId}")
 		public ResponseEntity<ApiResponse<List<Order>>> getAllOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
@@ -104,14 +109,15 @@ public class OrderController {
 			ApiResponse<List<Order>> response = new ApiResponse<>("success", orders);
 			return ResponseEntity.ok(response);
 		}
+
 	// Get all cancelled orders for a delivery boy
-//	@GetMapping("/{deliveryBoyId}/cancelled")
+//	@GetMapping("/{deliveryBoyId}/rejected")
 //	public ResponseEntity<ApiResponse<List<Order>>> getCancelledOrders(@PathVariable Long deliveryBoyId) {
 //		List<Order> cancelledOrders = orderService.getCancelledOrdersByDeliveryBoy(deliveryBoyId);
 //		ApiResponse<List<Order>> response = new ApiResponse<>("success", cancelledOrders);
 //		return ResponseEntity.ok(response);
 //	}
-//	
+	
 
 	// Cancel Order (Delivery Boy)
 //	@PostMapping("/{orderId}/cancel")
