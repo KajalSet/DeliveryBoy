@@ -62,11 +62,16 @@ public class OrderController {
 
 	// Reject Order (Delivery Boy)
 	@PostMapping("/reject/{deliveryBoyId}/{orderId}")
-	public ResponseEntity<ApiResponse<Order>> rejectOrder(@PathVariable Long orderId,@PathVariable Long deliveryBoyId,@RequestBody String reason) {
-		Order rejectedOrder = orderService.rejectOrder(orderId);
-		ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
-		return ResponseEntity.ok(response);
+	public ResponseEntity<ApiResponse<Order>> rejectOrder(
+	    @PathVariable Long orderId, 
+	    @PathVariable Long deliveryBoyId, 
+	    @RequestBody String reason) {
+
+	    Order rejectedOrder = orderService.rejectOrder(orderId, deliveryBoyId, reason);
+	    ApiResponse<Order> response = new ApiResponse<>("success", rejectedOrder);
+	    return ResponseEntity.ok(response);
 	}
+
 	
 	   //get all orders rejected by delivery boy
 		@GetMapping("/rejected")
@@ -90,12 +95,17 @@ public class OrderController {
 
 	
 	// Get All Orders by Delivery Boy ID
-		@GetMapping("/all/{deliveryBoyId}")
-		public ResponseEntity<ApiResponse<List<Order>>> getAllOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
-			List<Order> allOrders = orderService.getAllOrdersByDeliveryBoy(deliveryBoyId);
-			ApiResponse<List<Order>> response = new ApiResponse<>("success", allOrders);
-			return ResponseEntity.ok(response);
-		}
+	@GetMapping("/all/{deliveryBoyId}")
+	public ResponseEntity<ApiResponse<Map<String, List<Order>>>> getAllOrdersByDeliveryBoy(
+	        @PathVariable Long deliveryBoyId) {
+	    
+	    Map<String, List<Order>> groupedOrders = orderService.getOrdersGroupedByStatus(deliveryBoyId);
+	    
+	    ApiResponse<Map<String, List<Order>>> response = new ApiResponse<>("success", groupedOrders);
+	    return ResponseEntity.ok(response);
+	}
+
+
 
 		// Get orders by date range (filter by day, week, month, year)
 		@GetMapping("/filter")
