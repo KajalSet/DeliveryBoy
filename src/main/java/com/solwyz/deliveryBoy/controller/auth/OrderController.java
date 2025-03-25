@@ -52,11 +52,11 @@ public class OrderController {
 	
 	//list of accepted orders
 	@GetMapping("/todaysOrder/{deliveryBoyId}")
-	public ResponseEntity<ApiResponse<List<Order>>> getAcceptedOrdersyDeliveryBoy(@PathVariable Long deliveryBoyId) {
-		List<Order> acceptedOrders=orderService.getAcceptedOrdersyDeliveryBoy(deliveryBoyId);
-		ApiResponse<List<Order>>response=new ApiResponse<>("success",acceptedOrders);
-		return ResponseEntity.ok(response);
-	}
+    public ResponseEntity<ApiResponse<List<Order>>> getAcceptedOrdersByDeliveryBoy(@PathVariable Long deliveryBoyId) {
+        List<Order> acceptedOrders = orderService.getAcceptedOrdersByDeliveryBoy(deliveryBoyId);
+        ApiResponse<List<Order>> response = new ApiResponse<>("success", acceptedOrders);
+        return ResponseEntity.ok(response);
+    }
 		
 	
 

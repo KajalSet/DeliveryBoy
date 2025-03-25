@@ -44,6 +44,7 @@ public class SecurityConfig {
 						// Order APIs: Only Delivery Boy can accept/reject orders
 
 						.antMatchers("/api/orders/**").permitAll()
+						.antMatchers("/resetPassword").permitAll()
 
 						
 						// Only Delivery Boy can manage

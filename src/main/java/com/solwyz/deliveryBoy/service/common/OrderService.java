@@ -86,14 +86,22 @@ public class OrderService {
 		
 		return orderRepository.findByStatus( "REJECTED");
 	}
-
-	public List<Order> getAcceptedOrdersyDeliveryBoy(Long deliveryBoyId) {
-		
-		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "ACCEPTED");
-	}
-
 	
-    
+	
+
+	public List<Order> getAcceptedOrdersByDeliveryBoy(Long deliveryBoyId) {
+        LocalDate today = LocalDate.now(); // Get today's date
+        return orderRepository.findByDeliveryBoyIdAndStatusAndOrderDate(deliveryBoyId, "ACCEPTED", today);
+    }
+	
+   
+
+//	public List<Order> getAcceptedOrdersyDeliveryBoy(Long deliveryBoyId) {
+//		
+//		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "ACCEPTED");
+//	}
+
+
 //  public List<Order>  (Long deliveryBoyId) {
 //      LocalDate today = LocalDate.now();
 //      return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
