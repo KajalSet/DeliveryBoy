@@ -36,7 +36,7 @@ public class SecurityConfig {
 				.authorizeRequests(auth -> auth
 						// Allow Swagger & Public Endpoints
 						.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-						.antMatchers("/index", "/api/auth/login", "/api/auth/register").permitAll()
+						.antMatchers("/index", "/api/auth/login", "/api/auth/register","/api/auth/resetPassword").permitAll()
 
 						// Allow setting MPIN without JWT
 						.antMatchers("/api/auth/set-mpin").permitAll()
