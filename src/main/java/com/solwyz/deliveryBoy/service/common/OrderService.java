@@ -1,8 +1,11 @@
 package com.solwyz.deliveryBoy.service.common;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,23 +48,34 @@ public class OrderService {
 	}
 
 	// Reject Order
-	public Order rejectOrder(Long orderId) {
-		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+	public Order rejectOrder(Long orderId, Long deliveryBoyId, String reason) {
+	    Order order = orderRepository.findById(orderId)
+	        .orElseThrow(() -> new RuntimeException("Order not found"));
 
-		if (!order.getStatus().equals("PENDING")) {
-			throw new RuntimeException("Order already processed");
-		}
+	    if (!order.getStatus().equals("PENDING")) {
+	        throw new RuntimeException("Order already processed");
+	    }
 
-		order.setStatus("REJECTED");
-		return orderRepository.save(order);
+	    // Fetch the delivery boy
+	    DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId)
+	        .orElseThrow(() -> new RuntimeException("Delivery Boy not found"));
+
+	    // Set rejected status and assign the delivery boy
+	    order.setStatus("REJECTED");
+	    order.setDeliveryBoy(deliveryBoy);
+
+	    return orderRepository.save(order);
 	}
-	
+
 
     // Get All Orders for a Delivery Boy
-	public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId) {
-	    return orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+	public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId, List<String> statuses) {
+	    // If no specific statuses are provided, fetch all orders
+	    if (statuses == null || statuses.isEmpty()) {
+	        statuses = Arrays.asList("PENDING", "ACCEPTED", "DELIVERED", "REJECTED");
+	    }
+	    return orderRepository.findByDeliveryBoyIdAndStatusInOrderByOrderDateDesc(deliveryBoyId, statuses);
 	}
-
 
     // Get Today's Accepted Orders for a Delivery Boy
  
@@ -93,6 +107,14 @@ public class OrderService {
         LocalDate today = LocalDate.now(); // Get today's date
         return orderRepository.findByDeliveryBoyIdAndStatusAndOrderDate(deliveryBoyId, "ACCEPTED", today);
     }
+
+	public Map<String, List<Order>> getOrdersGroupedByStatus(Long deliveryBoyId) {
+	    List<Order> orders = orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+	    
+	    // Group orders by status
+	    return orders.stream().collect(Collectors.groupingBy(Order::getStatus));
+	}
+
 	
    
 
