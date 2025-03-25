@@ -77,12 +77,14 @@ public class OrderService {
 
 	// Get orders by date range (day/week/month/year)
 	public List<Order> getOrdersByDateRange(Date startDate, Date endDate) {
+		
 		return orderRepository.findByOrderDateBetween(startDate, endDate);
 	}
 
 	
-	public List<Order> getRejectedOrdersByDeliveryBoy(Long deliveryBoyId) {
-		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "REJECTED");
+	public List<Order> getRejectedOrdersByDeliveryBoy() {
+		
+		return orderRepository.findByStatus( "REJECTED");
 	}
 
 	public List<Order> getAcceptedOrdersyDeliveryBoy(Long deliveryBoyId) {
@@ -90,6 +92,7 @@ public class OrderService {
 		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "ACCEPTED");
 	}
 
+	
     
 //  public List<Order>  (Long deliveryBoyId) {
 //      LocalDate today = LocalDate.now();
@@ -108,8 +111,8 @@ public class OrderService {
 
 
 //	public List<Order> getCancelledOrdersByDeliveryBoy(Long deliveryBoyId) {
-//		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "CANCELLED");
+//		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "REJECTED");
 //	}
-
-	
+//
+//	
 }

@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.solwyz.deliveryBoy.models.Order;
@@ -22,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByDeliveryBoyIdOrderByOrderDateDesc(Long deliveryBoyId);
 
-
+	
 //    @Query("SELECT o FROM Order o WHERE o.deliveryBoy.id = :deliveryBoyId AND o.status = :status AND DATE(o.createdAt) = :today")
 //    List<Order> findByDeliveryBoyIdAndStatusAndDate(@Param("deliveryBoyId") Long deliveryBoyId, 
 //                                                    @Param("status") String status, 
