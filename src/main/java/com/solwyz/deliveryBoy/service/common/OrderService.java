@@ -49,36 +49,23 @@ public class OrderService {
 
 	// Reject Order
 	public Order rejectOrder(Long orderId, Long deliveryBoyId, String reason) {
-	    Order order = orderRepository.findById(orderId)
-	        .orElseThrow(() -> new RuntimeException("Order not found"));
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
 
-	    if (!order.getStatus().equals("PENDING")) {
-	        throw new RuntimeException("Order already processed");
-	    }
+		if (!order.getStatus().equals("PENDING")) {
+			throw new RuntimeException("Order already processed");
+		}
 
-	    // Fetch the delivery boy
-	    DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId)
-	        .orElseThrow(() -> new RuntimeException("Delivery Boy not found"));
+		// Fetch the delivery boy
+		DeliveryBoy deliveryBoy = deliveryBoyRepository.findById(deliveryBoyId)
+				.orElseThrow(() -> new RuntimeException("Delivery Boy not found"));
 
-	    // Set rejected status and assign the delivery boy
-	    order.setStatus("REJECTED");
-	    order.setDeliveryBoy(deliveryBoy);
+		// Set rejected status and assign the delivery boy
+		order.setStatus("REJECTED");
+		order.setDeliveryBoy(deliveryBoy);
 
-	    return orderRepository.save(order);
+		return orderRepository.save(order);
 	}
 
-
-    // Get All Orders for a Delivery Boy
-	public List<Order> getAllOrdersByDeliveryBoy(Long deliveryBoyId, List<String> statuses) {
-	    // If no specific statuses are provided, fetch all orders
-	    if (statuses == null || statuses.isEmpty()) {
-	        statuses = Arrays.asList("PENDING", "ACCEPTED", "DELIVERED", "REJECTED");
-	    }
-	    return orderRepository.findByDeliveryBoyIdAndStatusInOrderByOrderDateDesc(deliveryBoyId, statuses);
-	}
-
-    // Get Today's Accepted Orders for a Delivery Boy
- 
 	// Get Orders Assigned to a Delivery Boy
 	public List<Order> getOrdersByDeliveryBoy(Long deliveryBoyId, String status) {
 		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, status);
@@ -91,46 +78,32 @@ public class OrderService {
 
 	// Get orders by date range (day/week/month/year)
 	public List<Order> getOrdersByDateRange(Date startDate, Date endDate) {
-		
+
 		return orderRepository.findByOrderDateBetween(startDate, endDate);
 	}
 
-	
 	public List<Order> getRejectedOrdersByDeliveryBoy() {
-		
-		return orderRepository.findByStatus( "REJECTED");
+
+		return orderRepository.findByStatus("REJECTED");
 	}
-	
-	
 
 	public List<Order> getAcceptedOrdersByDeliveryBoy(Long deliveryBoyId) {
-        LocalDate today = LocalDate.now(); // Get today's date
-        return orderRepository.findByDeliveryBoyIdAndStatusAndOrderDate(deliveryBoyId, "ACCEPTED", today);
-    }
+		LocalDate today = LocalDate.now(); // Get today's date
+		return orderRepository.findByDeliveryBoyIdAndStatusAndOrderDate(deliveryBoyId, "ACCEPTED", today);
+	}
+	
+	// Get All Orders for a Delivery Boy
+		public List<Order> getOrdersByDeliveryBoy(Long deliveryBoyId) {
+			return orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+		}
 
 	public Map<String, List<Order>> getOrdersGroupedByStatus(Long deliveryBoyId) {
-	    List<Order> orders = orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
-	    
-	    // Group orders by status
-	    return orders.stream().collect(Collectors.groupingBy(Order::getStatus));
+		List<Order> orders = orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+		return orders.stream().collect(Collectors.groupingBy(Order::getStatus));
 	}
 
 	
-   
 
-//	public List<Order> getAcceptedOrdersyDeliveryBoy(Long deliveryBoyId) {
-//		
-//		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "ACCEPTED");
-//	}
-
-
-//  public List<Order>  (Long deliveryBoyId) {
-//      LocalDate today = LocalDate.now();
-//      return orderRepository.findByDeliveryBoyIdAndStatusAndDate(deliveryBoyId, "ACCEPTED", today);
-//  }
-
-
-	
 //	public Order cancelOrder(Long orderId) {
 //        Order order = orderRepository.findById(orderId)
 //            .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -138,7 +111,6 @@ public class OrderService {
 //        order.setStatus("CANCELLED");
 //        return orderRepository.save(order);
 //    }
-
 
 //	public List<Order> getCancelledOrdersByDeliveryBoy(Long deliveryBoyId) {
 //		return orderRepository.findByDeliveryBoyIdAndStatus(deliveryBoyId, "REJECTED");
