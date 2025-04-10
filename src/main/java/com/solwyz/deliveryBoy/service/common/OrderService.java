@@ -97,10 +97,11 @@ public class OrderService {
 			return orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
 		}
 
-	public Map<String, List<Order>> getOrdersGroupedByStatus(Long deliveryBoyId) {
-		List<Order> orders = orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
-		return orders.stream().collect(Collectors.groupingBy(Order::getStatus));
-	}
+		
+//	public Map<String, List<Order>> getOrdersGroupedByStatus(Long deliveryBoyId) {
+//		List<Order> orders = orderRepository.findByDeliveryBoyIdOrderByOrderDateDesc(deliveryBoyId);
+//		return orders.stream().collect(Collectors.groupingBy(Order::getStatus));
+//	}
 
 	
 
