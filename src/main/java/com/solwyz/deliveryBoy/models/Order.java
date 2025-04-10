@@ -34,6 +34,7 @@ public class Order {
 	private LocalDate orderDate;
 	//private Date orderDate;
 	private String storeName;
+	private String mobileNumber;
 
 	public String getStoreName() {
 		return storeName;
@@ -98,6 +99,14 @@ public class Order {
 
 	public void setOrderDate(LocalDate orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 	
 
