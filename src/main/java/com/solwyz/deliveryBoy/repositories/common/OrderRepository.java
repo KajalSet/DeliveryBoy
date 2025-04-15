@@ -15,7 +15,8 @@ import com.solwyz.deliveryBoy.models.Order;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 	List<Order> findByDeliveryBoyIdAndStatus(Long deliveryBoyId, String status);
 
-	List<Order> findByStatus(String status);
+	//List<Order> findByStatus(String status);
+	
 
 	List<Order> findByOrderDateBetween(Date startDate, Date endDate);
 

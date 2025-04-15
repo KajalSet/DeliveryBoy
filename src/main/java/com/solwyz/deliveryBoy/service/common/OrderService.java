@@ -85,10 +85,14 @@ public class OrderService {
 		return orderRepository.findByOrderDateBetween(startDate, endDate);
 	}
 
+//	public List<Order> getRejectedOrdersByDeliveryBoy() {
+//
+//		return orderRepository.findByStatus("REJECTED");
+//	}
 	public List<Order> getRejectedOrdersByDeliveryBoy() {
-
-		return orderRepository.findByStatus("REJECTED");
+	    return orderRepository.findByStatusOrderByOrderDateDesc("REJECTED");
 	}
+
 
 	public List<Order> getAcceptedOrdersByDeliveryBoy(Long deliveryBoyId) {
 		LocalDate today = LocalDate.now(); // Get today's date
