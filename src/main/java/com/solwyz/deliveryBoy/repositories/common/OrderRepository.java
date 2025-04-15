@@ -27,6 +27,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByDeliveryBoyIdAndStatusInOrderByOrderDateDesc(Long deliveryBoyId, List<String> statuses);
 
+	List<Order> findByStatusOrderByOrderDateDesc(String status);
+
+
 	//List<Order> findByDeliveryBoyIdOrderByOrderDateDesc(Long deliveryBoyId);
 
 //    @Query("SELECT o FROM Order o WHERE o.deliveryBoy.id = :deliveryBoyId AND o.status = :status AND DATE(o.createdAt) = :today")

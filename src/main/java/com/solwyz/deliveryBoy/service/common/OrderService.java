@@ -72,8 +72,11 @@ public class OrderService {
 	}
 
 	// Get All Pending Orders
+//	public List<Order> getPendingOrders() {
+//		return orderRepository.findByStatus("PENDING");
+//	}
 	public List<Order> getPendingOrders() {
-		return orderRepository.findByStatus("PENDING");
+	    return orderRepository.findByStatusOrderByOrderDateDesc("PENDING");
 	}
 
 	// Get orders by date range (day/week/month/year)
